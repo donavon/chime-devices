@@ -50,6 +50,13 @@ const sanitize = (list: MediaDeviceInfo[]) =>
     };
   });
 
+const mustBeInList = (
+  deviceId: string | null,
+  devices: SanitizedMediaDeviceInfo[]
+) => {
+  return devices.find(({ deviceId: id }) => deviceId === id) ? deviceId : null;
+};
+
 type useChimeDevicesProps = {
   deviceController?: DefaultDeviceController;
 };
@@ -119,6 +126,19 @@ export const useChimeDevicesInternal = ({
   const result = useMemo(
     () => ({
       ...mediaDevices,
+      currentAudioInputDeviceId: mustBeInList(
+        mediaDevices.currentAudioInputDeviceId,
+        mediaDevices.audioInputs
+      ),
+      currentAudioOutputDeviceId: mustBeInList(
+        mediaDevices.currentAudioOutputDeviceId,
+        mediaDevices.audioOutputs
+      ),
+      currentVideoInputDeviceId: mustBeInList(
+        mediaDevices.currentVideoInputDeviceId,
+        mediaDevices.videoInputs
+      ),
+
       deviceController,
       setAudioInput: (id: string) => {
         setMediaDevices(s => ({ ...s, currentAudioInputDeviceId: id }));
