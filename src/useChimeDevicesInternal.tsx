@@ -5,8 +5,11 @@ import {
   LogLevel,
 } from 'amazon-chime-sdk-js';
 
-const logger = new ConsoleLogger('MyLogger', LogLevel.ERROR);
-const defaultDeviceController = new DefaultDeviceController(logger);
+const getDefaultDeviceController = () => {
+  const logger = new ConsoleLogger('MyLogger', LogLevel.ERROR);
+  const defaultDeviceController = new DefaultDeviceController(logger);
+  return defaultDeviceController;
+};
 
 type SanitizedMediaDeviceInfo = {
   deviceId: string;
@@ -52,7 +55,7 @@ type useChimeDevicesProps = {
 };
 
 export const useChimeDevicesInternal = ({
-  deviceController = defaultDeviceController,
+  deviceController = getDefaultDeviceController(),
 }: useChimeDevicesProps = {}): MediaDevicesResults => {
   const [mediaDevices, setMediaDevices] = useState<MediaDevices>({
     audioInputs: [],
