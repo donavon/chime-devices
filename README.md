@@ -20,6 +20,8 @@ $ yarn add @chime/devices amazon-chime-sdk-js
 
 ## Use in your code
 
+### `ChimeDevicesProvider`
+
 Wrap yout `<App>` (or your components that will be using devices) in a `<ChimeDevicesProvider>` as follows.
 
 ```jsx
@@ -28,20 +30,80 @@ Wrap yout `<App>` (or your components that will be using devices) in a `<ChimeDe
 </ChimeDevicesProvider>
 ```
 
+Options props to `<ChimeDevicesProvider>` include.
+
+#### `deviceController`
+
+This is an optional `DefaultDeviceController` object.
+See [AWS Chime documentation](https://aws.github.io/amazon-chime-sdk-js/classes/defaultdevicecontroller.html) for more information.
+
+You could pass a custom controller that has logging enabled, for example.
+It's also used to mock during testing.
+
+#### `initialAudioInputDeviceId`
+
+The initial audio input device id (i.e. microphone) to use.
+You could persist the user's choice and use this to initialize the selection.
+If you don't specify an id, it will defaut to the first device in the list.
+
+#### `initialAudioOutDeviceId`
+
+The initial audio output device id (i.e. speaker) to use.
+You could persist the user's choice and use this to initialize the selection.
+If you don't specify an id, it will defaut to the first device in the list.
+
+#### `initialVideoInputDeviceId`
+
+The initial video input device id (i.e. camera) to use.
+You could persist the user's choice and use this to initialize the selection.
+If you don't specify an id, it will defaut to the first device in the list.
+
+### `useChimeDevices`
+
 Then, in some child component, you can call `useChimeDevices`, which returns the following.
 
-- `audioInputs` - A list of audio input devices (i.e. microphones). type = `{deviceId:string, label:string}[]`
-- `audioOutputs` - A list of audio output devices (i.e. speakers).
-- `videoInputs` - A list of video input devices (i.e. webcams).
-- `currentAudioInputDeviceId` - The currently selected audio input `deviceId` or `null`.
-- `currentAudioOutputDeviceId` - The currently selected audio output `deviceId` or `null`.
-- `currentVideoInputDeviceId` - The currently selected video input `deviceId` or `null`.
-- `deviceController` - The AWS Chime SDK `DeviceController`.
-- `setAudioInput` - A function to set the current audio input. Pass the `deviceId` of the new audio input.
-- `setAudioOutput` - A function to set the current audio output. Pass the `deviceId` of the new audio output.
-- `setVideoInput` - A function to set the current video input. Pass the `deviceId` of the new video input.
+#### `audioInputs`
 
-For example:
+A list of audio input devices (i.e. microphones). type = `{deviceId:string, label:string}[]`
+
+#### `audioOutputs`
+
+A list of audio output devices (i.e. speakers).
+
+#### `videoInputs`
+
+A list of video input devices (i.e. webcams).
+
+#### `currentAudioInputDeviceId`
+
+The currently selected audio input `deviceId` or `null`.
+
+#### `currentAudioOutputDeviceId`
+
+The currently selected audio output `deviceId` or `null`.
+
+#### `currentVideoInputDeviceId`
+
+The currently selected video input `deviceId` or `null`.
+
+#### `deviceController`
+
+The AWS Chime SDK `DeviceController`.
+
+#### `setAudioInput`
+
+A function to set the current audio input. Pass the `deviceId` of the new audio input.
+
+#### `setAudioOutput`
+
+A function to set the current audio output. Pass the `deviceId` of the new audio output.
+
+#### `setVideoInput`
+
+A function to set the current video input. Pass the `deviceId` of
+the new video input.
+
+### Example using `useChimeDevices`
 
 ```jsx
 const AudioInputDevices = () => {
