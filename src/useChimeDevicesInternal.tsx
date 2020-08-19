@@ -90,32 +90,38 @@ export const useChimeDevicesInternal = ({
     };
 
     const getCurrentLists = async () => {
-      // get an array of all devices
-      const mediaDevices = {
-        audioInputs: sanitize(await deviceController.listAudioInputDevices()),
-        audioOutputs: sanitize(await deviceController.listAudioOutputDevices()),
-        videoInputs: sanitize(await deviceController.listVideoInputDevices()),
-      };
+      try {
+        // get an array of all devices
+        const mediaDevices = {
+          audioInputs: sanitize(await deviceController.listAudioInputDevices()),
+          audioOutputs: sanitize(
+            await deviceController.listAudioOutputDevices()
+          ),
+          videoInputs: sanitize(await deviceController.listVideoInputDevices()),
+        };
 
-      // grab the zeroth elements of each array
-      const [currentAudioInput] = mediaDevices.audioInputs;
-      const [currentAudioOutput] = mediaDevices.audioOutputs;
-      const [currentVideoInput] = mediaDevices.videoInputs;
+        // grab the zeroth elements of each array
+        const [currentAudioInput] = mediaDevices.audioInputs;
+        const [currentAudioOutput] = mediaDevices.audioOutputs;
+        const [currentVideoInput] = mediaDevices.videoInputs;
 
-      // compute current device ids
-      const currentAudioInputDeviceId =
-        initialAudioInputDeviceId ?? currentAudioInput?.deviceId ?? null;
-      const currentAudioOutputDeviceId =
-        initialAudioOutDeviceId ?? currentAudioOutput?.deviceId ?? null;
-      const currentVideoInputDeviceId =
-        initialVideoInputDeviceId ?? currentVideoInput?.deviceId ?? null;
+        // compute current device ids
+        const currentAudioInputDeviceId =
+          initialAudioInputDeviceId ?? currentAudioInput?.deviceId ?? null;
+        const currentAudioOutputDeviceId =
+          initialAudioOutDeviceId ?? currentAudioOutput?.deviceId ?? null;
+        const currentVideoInputDeviceId =
+          initialVideoInputDeviceId ?? currentVideoInput?.deviceId ?? null;
 
-      setMediaDevices({
-        ...mediaDevices,
-        currentAudioInputDeviceId,
-        currentAudioOutputDeviceId,
-        currentVideoInputDeviceId,
-      });
+        setMediaDevices({
+          ...mediaDevices,
+          currentAudioInputDeviceId,
+          currentAudioOutputDeviceId,
+          currentVideoInputDeviceId,
+        });
+      } catch (ex) {
+        void 0;
+      }
     };
 
     deviceController.addDeviceChangeObserver(observer);
