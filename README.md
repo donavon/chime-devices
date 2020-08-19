@@ -1,10 +1,10 @@
 # @chime/devices
 
-This packgage contains a React context provider and a hook around AWS Chime for capturing system audio and video devices.
+This package contains a React context provider and a hook around the [AWS Chime SDK](https://aws.amazon.com/chime/chime-sdk/). It allows you to get a list of audio/video devices and select a current device which it will keep in state.
 
 ## Install
 
-This pacakge has a peer dependency on `amazon-chime-sdk-js`.
+This package has a peer dependency on `amazon-chime-sdk-js`.
 
 You can install the package using npm like this.
 
