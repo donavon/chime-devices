@@ -5,11 +5,8 @@ import {
   LogLevel,
 } from 'amazon-chime-sdk-js';
 
-const getDefaultDeviceController = () => {
-  const logger = new ConsoleLogger('MyLogger', LogLevel.ERROR);
-  const defaultDeviceController = new DefaultDeviceController(logger);
-  return defaultDeviceController;
-};
+const logger = new ConsoleLogger('MyLogger', LogLevel.ERROR);
+const defaultDeviceController = new DefaultDeviceController(logger);
 
 type SanitizedMediaDeviceInfo = {
   deviceId: string;
@@ -59,10 +56,16 @@ const mustBeInList = (
 
 type useChimeDevicesProps = {
   deviceController?: DefaultDeviceController;
+  initialAudioInputDeviceId?: string;
+  initialAudioOutDeviceId?: string;
+  initialVideoInputDeviceId?: string;
 };
 
 export const useChimeDevicesInternal = ({
-  deviceController = getDefaultDeviceController(),
+  deviceController = defaultDeviceController,
+  initialAudioInputDeviceId,
+  initialAudioOutDeviceId,
+  initialVideoInputDeviceId,
 }: useChimeDevicesProps = {}): MediaDevicesResults => {
   const [mediaDevices, setMediaDevices] = useState<MediaDevices>({
     audioInputs: [],
@@ -74,45 +77,45 @@ export const useChimeDevicesInternal = ({
   });
 
   useEffect(() => {
+    const createHandler = (key: string) => (list: MediaDeviceInfo[] = []) => {
+      setMediaDevices(s => ({
+        ...s,
+        [key]: sanitize(list),
+      }));
+    };
     const observer = {
-      audioInputsChanged: (list: MediaDeviceInfo[] = []) => {
-        setMediaDevices(s => ({
-          ...s,
-          audioInputs: sanitize(list),
-        }));
-      },
-      audioOutputsChanged: (list: MediaDeviceInfo[] = []) => {
-        setMediaDevices(s => ({
-          ...s,
-          audioOutputs: sanitize(list),
-        }));
-      },
-      videoInputsChanged: (list: MediaDeviceInfo[] = []) => {
-        setMediaDevices(s => ({
-          ...s,
-          videoInputs: sanitize(list),
-        }));
-      },
+      audioInputsChanged: createHandler('audioInputs'),
+      audioOutputsChanged: createHandler('audioOutputs'),
+      videoInputsChanged: createHandler('videoInputs'),
     };
 
     const getCurrentLists = async () => {
+      // get an array of all devices
       const mediaDevices = {
         audioInputs: sanitize(await deviceController.listAudioInputDevices()),
         audioOutputs: sanitize(await deviceController.listAudioOutputDevices()),
         videoInputs: sanitize(await deviceController.listVideoInputDevices()),
       };
 
+      // grab the zeroth elements of each array
       const [currentAudioInput] = mediaDevices.audioInputs;
       const [currentAudioOutput] = mediaDevices.audioOutputs;
       const [currentVideoInput] = mediaDevices.videoInputs;
 
-      setMediaDevices(s => ({
-        ...s,
+      // compute current device ids
+      const currentAudioInputDeviceId =
+        initialAudioInputDeviceId ?? currentAudioInput?.deviceId ?? null;
+      const currentAudioOutputDeviceId =
+        initialAudioOutDeviceId ?? currentAudioOutput?.deviceId ?? null;
+      const currentVideoInputDeviceId =
+        initialVideoInputDeviceId ?? currentVideoInput?.deviceId ?? null;
+
+      setMediaDevices({
         ...mediaDevices,
-        currentAudioInputDeviceId: currentAudioInput?.deviceId ?? null,
-        currentAudioOutputDeviceId: currentAudioOutput?.deviceId ?? null,
-        currentVideoInputDeviceId: currentVideoInput?.deviceId ?? null,
-      }));
+        currentAudioInputDeviceId,
+        currentAudioOutputDeviceId,
+        currentVideoInputDeviceId,
+      });
     };
 
     deviceController.addDeviceChangeObserver(observer);
@@ -121,7 +124,12 @@ export const useChimeDevicesInternal = ({
     return () => {
       deviceController.removeDeviceChangeObserver(observer);
     };
-  }, [deviceController]);
+  }, [
+    deviceController,
+    initialAudioInputDeviceId,
+    initialAudioOutDeviceId,
+    initialVideoInputDeviceId,
+  ]);
 
   const result = useMemo(
     () => ({

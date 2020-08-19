@@ -4,7 +4,7 @@
     "access": "public",
     "tag": "next"
   },
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/donavon/chime-devices.git"

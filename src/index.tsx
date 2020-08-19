@@ -11,13 +11,24 @@ const ChimeDevicesContext = React.createContext<MediaDevicesResults | null>(
 
 type ChimeDevicesProviderProps = {
   deviceController?: DefaultDeviceController;
+  initialAudioInputDeviceId?: string;
+  initialAudioOutDeviceId?: string;
+  initialVideoInputDeviceId?: string;
 };
 
 export const ChimeDevicesProvider: React.FC<ChimeDevicesProviderProps> = ({
   deviceController,
+  initialAudioInputDeviceId,
+  initialAudioOutDeviceId,
+  initialVideoInputDeviceId,
   children,
 }) => {
-  const value = useChimeDevicesInternal({ deviceController });
+  const value = useChimeDevicesInternal({
+    deviceController,
+    initialAudioInputDeviceId,
+    initialAudioOutDeviceId,
+    initialVideoInputDeviceId,
+  });
 
   return (
     <ChimeDevicesContext.Provider value={value}>
