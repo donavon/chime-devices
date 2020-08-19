@@ -60,7 +60,7 @@ If you don't specify an id, it will defaut to the first device in the list.
 
 ### `useChimeDevices`
 
-Then, in some child component, you can call `useChimeDevices`, which returns the following.
+You can call `useChimeDevices` in some child component which returns the following.
 
 #### `audioInputs`
 
@@ -72,23 +72,23 @@ A list of audio output devices (i.e. speakers).
 
 #### `videoInputs`
 
-A list of video input devices (i.e. webcams).
+A list of video input devices (i.e. cameras).
 
 #### `currentAudioInputDeviceId`
 
-The currently selected audio input `deviceId` or `null`.
+The currently selected audio input device id or `null`.
 
 #### `currentAudioOutputDeviceId`
 
-The currently selected audio output `deviceId` or `null`.
+The currently selected audio output device id or `null`.
 
 #### `currentVideoInputDeviceId`
 
-The currently selected video input `deviceId` or `null`.
+The currently selected video input device id or `null`.
 
 #### `deviceController`
 
-The AWS Chime SDK `DeviceController`.
+The AWS Chime SDK `DefaultDeviceController` used.
 
 #### `setAudioInput`
 
@@ -125,6 +125,8 @@ const AudioInputDevices = () => {
   );
 };
 ```
+
+## Sample code live!
 
 You can see an example running live on
 [CodeSandbox](https://codesandbox.io/s/mystifying-noether-2qwrp)
